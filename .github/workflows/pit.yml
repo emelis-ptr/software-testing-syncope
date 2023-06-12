@@ -33,4 +33,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: pit-reports
-          # path: bookkeeper-server/target/pit-reports/
+          path: core/spring/target/pit-reports/
