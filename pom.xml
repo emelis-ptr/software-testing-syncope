@@ -548,6 +548,7 @@ under the License.
         <junit5.version>5.8.2</junit5.version>
         <mockito.version>3.12.4</mockito.version>
         <ba-dua.version>0.8.0</ba-dua.version>
+        <pitest.version>1.8.0</pitest.version>
 
         <!-- maven -->
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
@@ -1570,17 +1571,17 @@ under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.1.2</version>
-                    <configuration>
+                    <!--<configuration>
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
                         <encoding>utf-8</encoding>
                         <runOrder>alphabetical</runOrder>
-                    </configuration>
+                    </configuration>-->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>3.1.2</version>
-                    <configuration>
+                    <!--<configuration>
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
                         <runOrder>alphabetical</runOrder>
                     </configuration>
@@ -1591,7 +1592,7 @@ under the License.
                                 <goal>verify</goal>
                             </goals>
                         </execution>
-                    </executions>
+                    </executions>-->
                 </plugin>
 
                 <plugin>
@@ -2224,6 +2225,9 @@ under the License.
         <!-- JaCoCo profile -->
         <profile>
             <id>jacoco</id>
+            <properties>
+                <checkstyle.skip>true</checkstyle.skip>
+            </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>

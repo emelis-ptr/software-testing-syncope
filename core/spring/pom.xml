@@ -144,6 +144,20 @@ under the License.
                     <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
+            <!-- Integration Testing -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M6</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -181,11 +195,14 @@ under the License.
                         <artifactId>pitest-maven</artifactId>
                         <version>1.14.0</version>
                         <configuration>
+                            <verbose>true</verbose>
                             <targetClasses>
                                 <param>org.apache.syncope.core.spring.security.Encryptor</param>
                             </targetClasses>
                             <targetTests>
                                 <param>org.apache.syncope.core.spring.security.EncryptorEncodeTest</param>
+                                <param>org.apache.syncope.core.spring.security.EncryptorVerifyTest</param>
+                                <param>org.apache.syncope.core.spring.security.EncryptorDecodeTest</param>
                             </targetTests>
                             <avoidCallsTo>
                                 <avoidCallsTo>org.slf4j</avoidCallsTo>
