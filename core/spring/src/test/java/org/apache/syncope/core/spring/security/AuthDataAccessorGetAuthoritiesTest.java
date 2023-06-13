@@ -43,6 +43,7 @@ public class AuthDataAccessorGetAuthoritiesTest extends AuthDataAccessorUtil {
                 {null, "efg", mockSecurityProperties("abd", "efg"), NullPointerException.class},
                 {"abd", "efg", mockSecurityProperties("abd", "efg"), true},
                 {"abd", "efg", mockSecurityProperties("abd", "abd"), true},
+                {"abd", null, mockSecurityProperties("abd", "abd"), true},
                 {"abd", "efg", mockSecurityProperties("def", "efeg"), NullPointerException.class}
         });
     }

@@ -5,8 +5,13 @@ public class AuthDataAccessorEnum {
 
         NULL,
         ACTIVE,
-        NO_ACTIVE_USER,
-        NO_ACTIVE_AUTHENTICATION
+        ACTIVE_PASSWORD_WRONG,
+        ACTIVE_USERNAME_WRONG,
+        NO_USER,
+        NO_AUTHENTICATION,
+        IS_SUSPENDED,
+        IS_FAILED_LOGINS,
+        IS_USER_MODIFIED
     }
 
     public enum ConfParamType {

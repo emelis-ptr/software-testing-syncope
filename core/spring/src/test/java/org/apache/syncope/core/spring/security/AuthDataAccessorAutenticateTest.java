@@ -46,14 +46,38 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorUtil {
                 user = getUser(username, password);
                 authentication = authentication(domain, username, password);
             }
-            case NO_ACTIVE_USER -> {
+            case ACTIVE_PASSWORD_WRONG -> {
+                user = getUser(username, password);
+                authentication = authentication(domain, username, "wrongPassword");
+            }
+            case ACTIVE_USERNAME_WRONG -> {
+                user = getUser(username, password);
+                authentication = authentication(domain, "wrongUsername", password);
+            }
+            case NO_USER -> {
                 user = null;
                 authentication = authentication(domain, username, password);
             }
-            case NO_ACTIVE_AUTHENTICATION -> {
+            case NO_AUTHENTICATION -> {
                 user = getUser(username, password);
                 authentication = null;
             }
+            case IS_SUSPENDED -> {
+                user = getUser(username, password);
+                user.setSuspended(true);
+                authentication = authentication(domain, username, password);
+            }
+            case IS_FAILED_LOGINS -> {
+                user = getUser(username, password);
+                user.setFailedLogins(1);
+                authentication = authentication(domain, username, password);
+            }
+            case IS_USER_MODIFIED -> {
+                user = getUser(username, password);
+                user.setLastModifier("newUser");
+                authentication = authentication(domain, username, password);
+            }
+
         }
 
         ConfParamOps confParamOps = null;
@@ -74,12 +98,16 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorUtil {
         return Arrays.asList(new Object[][]{
                 {null, AuthenticationType.ACTIVE, ConfParamType.USERNAME, NullPointerException.class},
                 {"ABD", AuthenticationType.ACTIVE, ConfParamType.USERNAME, DisabledException.class},
-                {"ABD", AuthenticationType.NO_ACTIVE_USER, ConfParamType.USERNAME, null},
-                {"ABD", AuthenticationType.NO_ACTIVE_AUTHENTICATION, ConfParamType.USERNAME, NullPointerException.class},
+                {"ABD", AuthenticationType.NULL, ConfParamType.USERNAME, DisabledException.class},
+                {"ABD", AuthenticationType.NO_USER, ConfParamType.USERNAME, null},
+                {"ABD", AuthenticationType.NO_AUTHENTICATION, ConfParamType.USERNAME, NullPointerException.class},
                 {" ", AuthenticationType.ACTIVE, ConfParamType.USERNAME, DisabledException.class},
                 {"", AuthenticationType.ACTIVE, ConfParamType.USERNAME, DisabledException.class},
 
                 {"ABD", AuthenticationType.ACTIVE, ConfParamType.NOT_USERNAME, NullPointerException.class},
+                {"ABD", AuthenticationType.IS_SUSPENDED, ConfParamType.USERNAME, DisabledException.class},
+                {"ABD", AuthenticationType.ACTIVE_PASSWORD_WRONG, ConfParamType.USERNAME, DisabledException.class},
+                {"ABD", AuthenticationType.ACTIVE_USERNAME_WRONG, ConfParamType.USERNAME, DisabledException.class},
         });
     }
 
