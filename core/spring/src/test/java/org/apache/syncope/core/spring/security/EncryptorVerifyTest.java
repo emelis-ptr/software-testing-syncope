@@ -8,32 +8,39 @@ import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.UUID;
 
 @RunWith(Parameterized.class)
 public class EncryptorVerifyTest {
-    private final String value; // {null, empty, notEmpty}
+    private String value; // {null, empty, notEmpty}
     private final CipherAlgorithm cipherAlgorithm; // {null, CipherAlgorithm}
     private final String encoded;  // {null, empty, notEmpty}
+    private final boolean withRandomValue;
     private final Object expected;
 
-    private static final Encryptor encryptor = Encryptor.getInstance();
+    private static Encryptor encryptor = Encryptor.getInstance();
 
-    public EncryptorVerifyTest(String value, CipherAlgorithm cipherAlgorithm, String encoded, Object expected) {
+    public EncryptorVerifyTest(String value, CipherAlgorithm cipherAlgorithm, String encoded, boolean withRandomValue, Object expected) {
         this.value = value;
         this.cipherAlgorithm = cipherAlgorithm;
         this.encoded = encoded;
+        this.withRandomValue = withRandomValue;
         this.expected = expected;
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> parameters() {
         return Arrays.asList(new Object[][]{
-                {null, CipherAlgorithm.AES, encryptValue(null, CipherAlgorithm.AES), false},
-                {"abd", CipherAlgorithm.AES, encryptValue("abd", CipherAlgorithm.AES), true},
-                {null, CipherAlgorithm.BCRYPT, encryptValue("abcd", CipherAlgorithm.AES), false},
-                {" ", CipherAlgorithm.BCRYPT, encryptValue(" ", CipherAlgorithm.BCRYPT), true},
-                {"", CipherAlgorithm.BCRYPT, encryptValue("", CipherAlgorithm.BCRYPT), true},
-                {"abcd", CipherAlgorithm.BCRYPT, encryptValue("abcd", CipherAlgorithm.BCRYPT), true},
+                {null, CipherAlgorithm.AES, encryptValue(null, CipherAlgorithm.AES), false, false},
+                {"abd", CipherAlgorithm.AES, encryptValue("abd", CipherAlgorithm.AES), false, true},
+                {" ", CipherAlgorithm.BCRYPT, encryptValue(" ", CipherAlgorithm.BCRYPT), false, true},
+                {"", CipherAlgorithm.BCRYPT, encryptValue("", CipherAlgorithm.BCRYPT), false, true},
+                {"abcd", CipherAlgorithm.BCRYPT, encryptValue("abcd", CipherAlgorithm.BCRYPT), false, true},
+                // cipherAlgorithm != encrypted cipherAlgorithm
+                {"abcd", CipherAlgorithm.AES, encryptValue("abcd", CipherAlgorithm.BCRYPT), false, false},
+                {null, CipherAlgorithm.BCRYPT, encryptValue("abcd", CipherAlgorithm.AES), false, false},
+                // line coverage 126
+                {"abcd", CipherAlgorithm.SHA, encryptValue("abcd", CipherAlgorithm.SHA), false, true},
         });
     }
 
@@ -54,5 +61,6 @@ public class EncryptorVerifyTest {
         }
         return encoded;
     }
+
 }
 

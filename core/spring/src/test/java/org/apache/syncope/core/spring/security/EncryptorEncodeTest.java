@@ -1,6 +1,7 @@
 package org.apache.syncope.core.spring.security;
 
 import org.apache.syncope.common.lib.types.CipherAlgorithm;
+import org.apache.syncope.core.spring.security.Encryptor;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +42,8 @@ public class EncryptorEncodeTest {
                 {"", null, true},
                 {"abcd", CipherAlgorithm.BCRYPT, true},
                 {"abcd", null, true},
+                // line coverage 109
+                {"abcd", CipherAlgorithm.SHA, true},
         });
     }
 

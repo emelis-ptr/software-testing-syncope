@@ -50,4 +50,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: pit-reports
-          path: syncope-core/target/pit-reports/
+          path: core/spring/target/pit-reports/

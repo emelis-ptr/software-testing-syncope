@@ -128,6 +128,16 @@ under the License.
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>${mockito.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -135,6 +145,7 @@ under the License.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.3.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -186,6 +197,7 @@ under the License.
             </activation>
             <properties>
                 <withHistory>true</withHistory>
+                <checkstyle.skip>true</checkstyle.skip>
                 <pitest.version>1.8.0</pitest.version>
             </properties>
             <build>
@@ -233,6 +245,7 @@ under the License.
                 <argLine>-javaagent:target/dependency/ba-dua-agent-rt-${ba-dua.version}-all.jar
                     -Doutput.file=target/badua.ser
                 </argLine>
+                <checkstyle.skip>true</checkstyle.skip>
             </properties>
             <dependencies>
                 <dependency>
