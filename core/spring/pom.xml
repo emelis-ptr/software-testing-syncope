@@ -216,7 +216,8 @@ under the License.
                                 <param>org.apache.syncope.core.spring.security.EncryptorEncodeTest</param>
                                 <param>org.apache.syncope.core.spring.security.EncryptorVerifyTest</param>
                                 <param>org.apache.syncope.core.spring.security.EncryptorDecodeTest</param>
-                                <param>org.apache.syncope.core.spring.security.AuthDataAccessorTest</param>
+                                <param>org.apache.syncope.core.spring.security.AuthDataAccessorAutenticateTest</param>
+                                <param>org.apache.syncope.core.spring.security.AuthDataAccessorGetAuthoritiesTest</param>
                             </targetTests>
                             <avoidCallsTo>
                                 <avoidCallsTo>org.slf4j</avoidCallsTo>

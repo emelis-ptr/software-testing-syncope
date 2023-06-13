@@ -4,6 +4,8 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.apache.syncope.common.keymaster.client.api.ConfParamOps;
 import org.apache.syncope.core.persistence.api.entity.user.User;
 import org.apache.syncope.core.spring.security.entity.MyUser;
+import org.apache.syncope.core.spring.security.util.AuthDataAccessorEnum.AuthenticationType;
+import org.apache.syncope.core.spring.security.util.AuthDataAccessorEnum.ConfParamType;
 import org.apache.syncope.core.spring.security.util.AuthDataAccessorUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,7 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @RunWith(Parameterized.class)
-public class AuthDataAccessorTest extends AuthDataAccessorUtil {
+public class AuthDataAccessorAutenticateTest extends AuthDataAccessorUtil {
     private final String domain; // {null, empty, notEmpty}
     private final Object expected;
 
@@ -24,7 +26,7 @@ public class AuthDataAccessorTest extends AuthDataAccessorUtil {
     private Authentication authentication;
     private User user;
 
-    public AuthDataAccessorTest(String domain, AuthenticationType authenticationType, ConfParamType confParamType, Object expected) {
+    public AuthDataAccessorAutenticateTest(String domain, AuthenticationType authenticationType, ConfParamType confParamType, Object expected) {
         this.domain = domain;
         this.expected = expected;
         config(domain, authenticationType, confParamType);
@@ -60,7 +62,7 @@ public class AuthDataAccessorTest extends AuthDataAccessorUtil {
             case NOT_USERNAME -> confParamOps = confParam("different-username");
         }
         try {
-            this.authDataAccessor = new AuthDataAccessor(new SecurityProperties(), mockRealDAO(), mockUserDAO(username, password, user), null, null, null, confParamOps, null, null, null, null, null, null);
+            this.authDataAccessor = new AuthDataAccessor(new SecurityProperties(), mockRealDAO(), mockUserDAO(user), null, null, null, confParamOps, null, null, null, null, null, null);
         } catch (Error | Exception e) {
             Assert.fail();
         }
@@ -77,7 +79,7 @@ public class AuthDataAccessorTest extends AuthDataAccessorUtil {
                 {" ", AuthenticationType.ACTIVE, ConfParamType.USERNAME, DisabledException.class},
                 {"", AuthenticationType.ACTIVE, ConfParamType.USERNAME, DisabledException.class},
 
-                {"ABD", AuthenticationType.ACTIVE, ConfParamType.NOT_USERNAME,NullPointerException.class},
+                {"ABD", AuthenticationType.ACTIVE, ConfParamType.NOT_USERNAME, NullPointerException.class},
         });
     }
 

@@ -5,6 +5,7 @@ import org.apache.syncope.core.persistence.api.dao.RealmDAO;
 import org.apache.syncope.core.persistence.api.dao.UserDAO;
 import org.apache.syncope.core.persistence.api.entity.Realm;
 import org.apache.syncope.core.persistence.api.entity.user.User;
+import org.apache.syncope.core.spring.security.SecurityProperties;
 import org.apache.syncope.core.spring.security.SyncopeAuthenticationDetails;
 import org.apache.syncope.core.spring.security.entity.MyUser;
 import org.mockito.Mock;
@@ -14,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mock;
 
 public class AuthDataAccessorUtil {
     @Mock
@@ -21,6 +23,14 @@ public class AuthDataAccessorUtil {
     @Mock
     private UserDAO userDAO;
 
+    /**
+     * Mock Authentication
+     *
+     * @param domain:
+     * @param username:
+     * @param password:
+     * @return Authentication
+     */
     protected Authentication authentication(String domain, String username, String password) {
         Authentication auth = Mockito.mock(Authentication.class);
         Mockito.when(auth.getName()).thenReturn(username);
@@ -29,6 +39,12 @@ public class AuthDataAccessorUtil {
         return auth;
     }
 
+    /**
+     * Mock ConfParamOps
+     *
+     * @param username:
+     * @return ConfParamOps
+     */
     protected ConfParamOps confParam(String username) {
         ConfParamOps confParamOps = Mockito.mock(ConfParamOps.class);
         Mockito.when(confParamOps.get(anyString(), eq("authentication.attributes"), any(), any())).thenReturn(new String[]{username});
@@ -37,6 +53,11 @@ public class AuthDataAccessorUtil {
         return confParamOps;
     }
 
+    /**
+     * Mock RealmDAO
+     *
+     * @return RealmDAO
+     */
     protected RealmDAO mockRealDAO() {
         realmDAO = Mockito.mock(RealmDAO.class);
         Realm mockRealm = Mockito.mock(Realm.class);
@@ -44,12 +65,25 @@ public class AuthDataAccessorUtil {
         return realmDAO;
     }
 
-    protected UserDAO mockUserDAO(String username, String password, User user) {
+    /**
+     * Mock UserDAO
+     *
+     * @param user:
+     * @return UserDAO
+     */
+    protected UserDAO mockUserDAO(User user) {
         userDAO = Mockito.mock(UserDAO.class);
         Mockito.when(userDAO.findByUsername(any())).thenReturn(user);
         return userDAO;
     }
 
+    /**
+     * User
+     *
+     * @param username:
+     * @param password:
+     * @return User
+     */
     protected User getUser(String username, String password) {
         User user = new MyUser();
         user.setUsername(username);
@@ -57,16 +91,18 @@ public class AuthDataAccessorUtil {
         return user;
     }
 
-    public enum AuthenticationType {
-
-        NULL,
-        ACTIVE,
-        NO_ACTIVE_USER,
-        NO_ACTIVE_AUTHENTICATION
+    /**
+     * Mock SecurityProperties
+     *
+     * @param anonymousUser:
+     * @param adminUser:
+     * @return SecurityProperties
+     */
+    protected static SecurityProperties mockSecurityProperties(String anonymousUser, String adminUser) {
+        SecurityProperties securityProperties = mock(SecurityProperties.class);
+        Mockito.when(securityProperties.getAnonymousUser()).thenReturn(anonymousUser);
+        Mockito.when(securityProperties.getAdminUser()).thenReturn(adminUser);
+        return securityProperties;
     }
 
-    public enum ConfParamType {
-        USERNAME,
-        NOT_USERNAME
-    }
 }
