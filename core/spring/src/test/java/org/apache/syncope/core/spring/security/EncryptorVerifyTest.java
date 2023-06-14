@@ -8,23 +8,20 @@ import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.UUID;
 
 @RunWith(Parameterized.class)
 public class EncryptorVerifyTest {
     private String value; // {null, empty, notEmpty}
     private final CipherAlgorithm cipherAlgorithm; // {null, CipherAlgorithm}
     private final String encoded;  // {null, empty, notEmpty}
-    private final boolean withRandomValue;
     private final Object expected;
 
-    private static Encryptor encryptor = Encryptor.getInstance();
+    private static final Encryptor encryptor = Encryptor.getInstance();
 
-    public EncryptorVerifyTest(String value, CipherAlgorithm cipherAlgorithm, String encoded, boolean withRandomValue, Object expected) {
+    public EncryptorVerifyTest(String value, CipherAlgorithm cipherAlgorithm, String encoded, Object expected) {
         this.value = value;
         this.cipherAlgorithm = cipherAlgorithm;
         this.encoded = encoded;
-        this.withRandomValue = withRandomValue;
         this.expected = expected;
     }
 
@@ -39,8 +36,11 @@ public class EncryptorVerifyTest {
                 // cipherAlgorithm != encrypted cipherAlgorithm
                 {"abcd", CipherAlgorithm.AES, encryptValue("abcd", CipherAlgorithm.BCRYPT), false, false},
                 {null, CipherAlgorithm.BCRYPT, encryptValue("abcd", CipherAlgorithm.AES), false, false},
-                // line coverage 126
+                // line coverage 126 PIT
                 {"abcd", CipherAlgorithm.SHA, encryptValue("abcd", CipherAlgorithm.SHA), false, true},
+                // line coverage 121 JACOCO
+                {"abd", null, encryptValue("abd", CipherAlgorithm.AES), false, true},
+
         });
     }
 
