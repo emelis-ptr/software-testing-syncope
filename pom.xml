@@ -544,15 +544,15 @@ under the License.
 
         <!-- test version -->
         <jacoco.version>0.8.10</jacoco.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.2</junit.version>
         <junit5.version>5.8.2</junit5.version>
         <mockito.version>5.2.0</mockito.version>
         <ba-dua.version>0.8.0</ba-dua.version>
         <pitest.version>1.8.0</pitest.version>
 
         <!-- maven -->
-        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-        <argLine/>
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+        <!--<argLine/>-->
     </properties>
 
     <dependencyManagement>
@@ -1571,18 +1571,18 @@ under the License.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.1.2</version>
-                    <!--<configuration>
+                    <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
                         <encoding>utf-8</encoding>
                         <runOrder>alphabetical</runOrder>
-                    </configuration>-->
+                    </configuration>
                 </plugin>
-                <!--<plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>3.1.2</version>
-                    &lt;!&ndash;<configuration>
+                    <configuration>
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
                         <runOrder>alphabetical</runOrder>
                     </configuration>
@@ -1593,8 +1593,8 @@ under the License.
                                 <goal>verify</goal>
                             </goals>
                         </execution>
-                    </executions>&ndash;&gt;
-                </plugin>-->
+                    </executions>
+                </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -2175,7 +2175,7 @@ under the License.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-site-plugin</artifactId>
-                        <version>3.12.1</version>
+                        <version>4.0.0-M8</version>
                         <configuration>
                             <locales>en</locales>
                             <generateProjectInfo>false</generateProjectInfo>
@@ -2234,18 +2234,6 @@ under the License.
             </activation>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${maven-surefire-plugin.version}</version>
-                        <configuration>
-                            <!-- some tests hang if not run in a separate JVM -->
-                            <argLine>@{argLine}</argLine>
-                            <forkCount>1</forkCount>
-                            <reuseForks>false</reuseForks>
-                            <parallel>none</parallel>
-                        </configuration>
-                    </plugin>
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>

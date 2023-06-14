@@ -98,7 +98,7 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorUtil {
         return Arrays.asList(new Object[][]{
                 {null, AuthenticationType.ACTIVE, ConfParamType.USERNAME, NullPointerException.class},
                 {"ABD", AuthenticationType.ACTIVE, ConfParamType.USERNAME, DisabledException.class},
-                {"ABD", AuthenticationType.NULL, ConfParamType.USERNAME, DisabledException.class},
+                {"ABD", AuthenticationType.NULL, ConfParamType.USERNAME, NullPointerException.class},
                 {"ABD", AuthenticationType.NO_USER, ConfParamType.USERNAME, null},
                 {"ABD", AuthenticationType.NO_AUTHENTICATION, ConfParamType.USERNAME, NullPointerException.class},
                 {" ", AuthenticationType.ACTIVE, ConfParamType.USERNAME, DisabledException.class},
