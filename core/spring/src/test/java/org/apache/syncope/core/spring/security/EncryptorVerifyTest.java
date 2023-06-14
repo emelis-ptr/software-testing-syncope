@@ -28,18 +28,18 @@ public class EncryptorVerifyTest {
     @Parameterized.Parameters
     public static Collection<Object[]> parameters() {
         return Arrays.asList(new Object[][]{
-                {null, CipherAlgorithm.AES, encryptValue(null, CipherAlgorithm.AES), false, false},
-                {"abd", CipherAlgorithm.AES, encryptValue("abd", CipherAlgorithm.AES), false, true},
-                {" ", CipherAlgorithm.BCRYPT, encryptValue(" ", CipherAlgorithm.BCRYPT), false, true},
-                {"", CipherAlgorithm.BCRYPT, encryptValue("", CipherAlgorithm.BCRYPT), false, true},
-                {"abcd", CipherAlgorithm.BCRYPT, encryptValue("abcd", CipherAlgorithm.BCRYPT), false, true},
+                {null, CipherAlgorithm.AES, encryptValue(null, CipherAlgorithm.AES), false},
+                {"abd", CipherAlgorithm.AES, encryptValue("abd", CipherAlgorithm.AES), true},
+                {" ", CipherAlgorithm.BCRYPT, encryptValue(" ", CipherAlgorithm.BCRYPT), true},
+                {"", CipherAlgorithm.BCRYPT, encryptValue("", CipherAlgorithm.BCRYPT), true},
+                {"abcd", CipherAlgorithm.BCRYPT, encryptValue("abcd", CipherAlgorithm.BCRYPT), true},
                 // cipherAlgorithm != encrypted cipherAlgorithm
-                {"abcd", CipherAlgorithm.AES, encryptValue("abcd", CipherAlgorithm.BCRYPT), false, false},
-                {null, CipherAlgorithm.BCRYPT, encryptValue("abcd", CipherAlgorithm.AES), false, false},
+                {"abcd", CipherAlgorithm.AES, encryptValue("abcd", CipherAlgorithm.BCRYPT), false},
+                {null, CipherAlgorithm.BCRYPT, encryptValue("abcd", CipherAlgorithm.AES), false},
                 // line coverage 126 PIT
-                {"abcd", CipherAlgorithm.SHA, encryptValue("abcd", CipherAlgorithm.SHA), false, true},
+                {"abcd", CipherAlgorithm.SHA, encryptValue("abcd", CipherAlgorithm.SHA), true},
                 // line coverage 121 JACOCO
-                {"abd", null, encryptValue("abd", CipherAlgorithm.AES), false, true},
+                {"abd", null, encryptValue("abd", CipherAlgorithm.AES), true},
 
         });
     }
