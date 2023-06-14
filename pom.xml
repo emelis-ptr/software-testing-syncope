@@ -552,6 +552,7 @@ under the License.
 
         <!-- maven -->
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+        <argLine/>
     </properties>
 
     <dependencyManagement>
@@ -1577,11 +1578,11 @@ under the License.
                         <runOrder>alphabetical</runOrder>
                     </configuration>-->
                 </plugin>
-                <plugin>
+                <!--<plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>3.1.2</version>
-                    <!--<configuration>
+                    &lt;!&ndash;<configuration>
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
                         <runOrder>alphabetical</runOrder>
                     </configuration>
@@ -1592,8 +1593,8 @@ under the License.
                                 <goal>verify</goal>
                             </goals>
                         </execution>
-                    </executions>-->
-                </plugin>
+                    </executions>&ndash;&gt;
+                </plugin>-->
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -2234,8 +2235,21 @@ under the License.
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
+                        <configuration>
+                            <!-- some tests hang if not run in a separate JVM -->
+                            <argLine>@{argLine}</argLine>
+                            <forkCount>1</forkCount>
+                            <reuseForks>false</reuseForks>
+                            <parallel>none</parallel>
+                        </configuration>
+                    </plugin>
+                    <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.version}</version>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>

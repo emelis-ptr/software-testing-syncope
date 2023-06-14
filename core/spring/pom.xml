@@ -151,12 +151,12 @@ under the License.
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-                <configuration>
+                <!--<configuration>
                     <testFailureIgnore>true</testFailureIgnore>
-                </configuration>
+                </configuration>-->
             </plugin>
             <!-- Integration Testing -->
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.0.0-M6</version>
@@ -168,7 +168,7 @@ under the License.
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
         <resources>
             <resource>
