@@ -24,7 +24,7 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorUtil {
 
     private AuthDataAccessor authDataAccessor;
     private Authentication authentication;
-    private User user;
+    private User myUser;
 
     public AuthDataAccessorAutenticateTest(String domain, AuthenticationType authenticationType, ConfParamType confParamType, Object expected) {
         this.domain = domain;
@@ -36,7 +36,7 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorUtil {
         String username = "myUsername";
         String password = "myPassword";
 
-        user = new MyUser();
+        User user = new MyUser();
         switch (authenticationType) {
             case NULL -> {
                 user = null;
@@ -79,7 +79,7 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorUtil {
             }
 
         }
-
+        myUser = user;
         ConfParamOps confParamOps = null;
         switch (confParamType) {
             case USERNAME -> confParamOps = confParam("username");
@@ -117,7 +117,7 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorUtil {
         try {
             Triple<User, Boolean, String> result = this.authDataAccessor.authenticate(this.domain, this.authentication);
             actual = result.getMiddle();
-            Assert.assertEquals(user, result.getLeft());
+            Assert.assertEquals(myUser, result.getLeft());
         } catch (Exception e) {
             actual = e.getClass();
         }
