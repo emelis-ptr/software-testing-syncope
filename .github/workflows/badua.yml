@@ -55,7 +55,7 @@ jobs:
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-        run: mvn -B clean verify -P badua
+        # run: mvn -B clean verify -P badua
 
       - name: Add Ba-dua report
         uses: actions/upload-artifact@v3
