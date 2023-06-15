@@ -1,10 +1,16 @@
 package org.apache.syncope.core.spring.security;
 
 import org.apache.syncope.common.lib.types.CipherAlgorithm;
+import org.apache.syncope.core.spring.ApplicationContextProvider;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -23,6 +29,7 @@ public class EncryptorEncodeTest {
     private final Object expected;
 
     private static final Encryptor encryptor = Encryptor.getInstance();
+    public static MockedStatic<ApplicationContextProvider> mockedStatic;
 
     public EncryptorEncodeTest(String value, CipherAlgorithm cipherAlgorithm, Object expected) {
         this.value = value;
@@ -66,5 +73,21 @@ public class EncryptorEncodeTest {
         }
 
         Assert.assertEquals(this.expected, result);
+    }
+
+    @BeforeClass
+    public static void mock() {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        beanFactory.registerSingleton("securityProperties", new SecurityProperties());
+
+        mockedStatic = Mockito.mockStatic(ApplicationContextProvider.class);
+        mockedStatic.when(ApplicationContextProvider::getBeanFactory).thenReturn(beanFactory);
+    }
+
+    @AfterClass
+    public static void close() {
+        if (mockedStatic != null) {
+            mockedStatic.close();
+        }
     }
 }

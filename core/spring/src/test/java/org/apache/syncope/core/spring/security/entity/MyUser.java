@@ -13,20 +13,26 @@ public class MyUser implements User {
 
     private String username;
     private String password;
-    private CipherAlgorithm cipherAlgorithm;
-    private boolean isSuspended;
+    private CipherAlgorithm cipherAlgorithm = CipherAlgorithm.AES;
+    private Integer failedlogins = 0;
+    private String status = "ACTIVE";
+    private String lastModifier;
+    private OffsetDateTime lastLoginDate;
 
     public MyUser() {
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
 
+    @Override
     public void setUsername(String username) {
         this.username = username;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
@@ -36,10 +42,12 @@ public class MyUser implements User {
 
     }
 
+    @Override
     public void setPassword(String password) {
         this.password = password;
     }
 
+    @Override
     public CipherAlgorithm getCipherAlgorithm() {
         return cipherAlgorithm;
     }
@@ -53,13 +61,14 @@ public class MyUser implements User {
         this.cipherAlgorithm = cipherAlgorithm;
     }
 
+    @Override
     public Boolean isSuspended() {
-        return isSuspended;
+        return status.equals("SUSPENDED");
     }
 
     @Override
     public void setSuspended(Boolean suspended) {
-
+        this.status = "SUSPENDED";
     }
 
 
@@ -85,7 +94,7 @@ public class MyUser implements User {
 
     @Override
     public String getLastModifier() {
-        return null;
+        return this.lastModifier;
     }
 
     @Override
@@ -115,7 +124,7 @@ public class MyUser implements User {
 
     @Override
     public void setLastModifier(String lastModifier) {
-
+        this.lastModifier = lastModifier;
     }
 
     @Override
@@ -145,12 +154,12 @@ public class MyUser implements User {
 
     @Override
     public String getStatus() {
-        return null;
+        return status;
     }
 
     @Override
     public void setStatus(String status) {
-
+        this.status = status;
     }
 
     @Override
@@ -335,22 +344,22 @@ public class MyUser implements User {
 
     @Override
     public Integer getFailedLogins() {
-        return null;
+        return this.failedlogins;
     }
 
     @Override
     public void setFailedLogins(Integer failedLogins) {
-
+        this.failedlogins = failedLogins;
     }
 
     @Override
     public OffsetDateTime getLastLoginDate() {
-        return null;
+        return this.lastLoginDate;
     }
 
     @Override
     public void setLastLoginDate(OffsetDateTime lastLoginDate) {
-
+        this.lastLoginDate = lastLoginDate;
     }
 
     @Override

@@ -206,6 +206,13 @@ under the License.
                         <groupId>org.pitest</groupId>
                         <artifactId>pitest-maven</artifactId>
                         <version>1.14.0</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.pitest</groupId>
+                                <artifactId>pitest-junit5-plugin</artifactId>
+                                <version>1.2.0</version>
+                            </dependency>
+                        </dependencies>
                         <configuration>
                             <verbose>true</verbose>
                             <targetClasses>
@@ -213,11 +220,11 @@ under the License.
                                 <param>org.apache.syncope.core.spring.security.AuthDataAccessor</param>
                             </targetClasses>
                             <targetTests>
+                                <param>org.apache.syncope.core.spring.security.AuthDataAccessorAutenticateTest</param>
+                                <param>org.apache.syncope.core.spring.security.AuthDataAccessorGetAuthoritiesTest</param>
                                 <param>org.apache.syncope.core.spring.security.EncryptorEncodeTest</param>
                                 <param>org.apache.syncope.core.spring.security.EncryptorVerifyTest</param>
                                 <param>org.apache.syncope.core.spring.security.EncryptorDecodeTest</param>
-                                <param>org.apache.syncope.core.spring.security.AuthDataAccessorAutenticateTest</param>
-                                <param>org.apache.syncope.core.spring.security.AuthDataAccessorGetAuthoritiesTest</param>
                             </targetTests>
                             <avoidCallsTo>
                                 <avoidCallsTo>org.slf4j</avoidCallsTo>
@@ -289,10 +296,10 @@ under the License.
                         <version>1.5.0</version>
                         <executions>
                             <execution>
+                                <phase>verify</phase>
                                 <goals>
                                     <goal>java</goal>
                                 </goals>
-                                <phase>verify</phase>
                                 <configuration>
                                     <mainClass>br.usp.each.saeg.badua.cli.Report</mainClass>
                                     <arguments>

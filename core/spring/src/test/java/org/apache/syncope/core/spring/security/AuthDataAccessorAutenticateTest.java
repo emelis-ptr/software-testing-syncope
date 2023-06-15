@@ -1,12 +1,9 @@
 package org.apache.syncope.core.spring.security;
 
 import org.apache.commons.lang3.tuple.Triple;
-import org.apache.syncope.common.keymaster.client.api.ConfParamOps;
 import org.apache.syncope.core.persistence.api.entity.user.User;
-import org.apache.syncope.core.spring.security.entity.MyUser;
 import org.apache.syncope.core.spring.security.util.AuthDataAccessorEnum.AuthenticationType;
-import org.apache.syncope.core.spring.security.util.AuthDataAccessorEnum.ConfParamType;
-import org.apache.syncope.core.spring.security.util.AuthDataAccessorUtil;
+import org.apache.syncope.core.spring.security.util.AuthDataAccessorMock;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,75 +15,32 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @RunWith(Parameterized.class)
-public class AuthDataAccessorAutenticateTest extends AuthDataAccessorUtil {
+public class AuthDataAccessorAutenticateTest extends AuthDataAccessorMock {
     private final String domain; // {null, empty, notEmpty}
-    private final Object expected;
-
+    private final Object isExceptionExpected;
     private AuthDataAccessor authDataAccessor;
     private Authentication authentication;
     private User myUser;
+    private Integer failedLogins;
+    private Object isAuthenticated;
 
-    public AuthDataAccessorAutenticateTest(String domain, AuthenticationType authenticationType, ConfParamType confParamType, Object expected) {
+    public AuthDataAccessorAutenticateTest(String domain, AuthenticationType authenticationType, String confParamUsername, int numUsers, Object isExceptionExpected) {
         this.domain = domain;
-        this.expected = expected;
-        config(domain, authenticationType, confParamType);
+        this.isExceptionExpected = isExceptionExpected;
+        config(domain, authenticationType, confParamUsername, numUsers);
     }
 
-    private void config(String domain, AuthenticationType authenticationType, ConfParamType confParamType) {
+    private void config(String domain, AuthenticationType authenticationType, String confParamUsername, int numUsers) {
         String username = "myUsername";
         String password = "myPassword";
 
-        User user = new MyUser();
-        switch (authenticationType) {
-            case NULL -> {
-                user = null;
-                authentication = null;
-            }
-            case ACTIVE -> {
-                user = getUser(username, password);
-                authentication = authentication(domain, username, password);
-            }
-            case ACTIVE_PASSWORD_WRONG -> {
-                user = getUser(username, password);
-                authentication = authentication(domain, username, "wrongPassword");
-            }
-            case ACTIVE_USERNAME_WRONG -> {
-                user = getUser(username, password);
-                authentication = authentication(domain, "wrongUsername", password);
-            }
-            case NO_USER -> {
-                user = null;
-                authentication = authentication(domain, username, password);
-            }
-            case NO_AUTHENTICATION -> {
-                user = getUser(username, password);
-                authentication = null;
-            }
-            case IS_SUSPENDED -> {
-                user = getUser(username, password);
-                user.setSuspended(true);
-                authentication = authentication(domain, username, password);
-            }
-            case IS_FAILED_LOGINS -> {
-                user = getUser(username, password);
-                user.setFailedLogins(1);
-                authentication = authentication(domain, username, password);
-            }
-            case IS_USER_MODIFIED -> {
-                user = getUser(username, password);
-                user.setLastModifier("newUser");
-                authentication = authentication(domain, username, password);
-            }
+        myUser = returnUser(domain, authenticationType, username, password);
 
-        }
-        myUser = user;
-        ConfParamOps confParamOps = null;
-        switch (confParamType) {
-            case USERNAME -> confParamOps = confParam("username");
-            case NOT_USERNAME -> confParamOps = confParam("different-username");
-        }
+        if (myUser != null)
+            failedLogins = myUser.getFailedLogins();
+
         try {
-            this.authDataAccessor = new AuthDataAccessor(new SecurityProperties(), mockRealDAO(), mockUserDAO(user), null, null, null, confParamOps, null, null, null, null, null, null);
+            this.authDataAccessor = new AuthDataAccessor(new SecurityProperties(), mockRealDAO(), mockUserDAO(myUser), null, mockAnySearchDAO(myUser, numUsers), null, confParam(confParamUsername), null, null, null, null, null, null);
         } catch (Error | Exception e) {
             Assert.fail();
         }
@@ -96,34 +50,99 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorUtil {
     @Parameterized.Parameters
     public static Collection<Object[]> parameters() {
         return Arrays.asList(new Object[][]{
-                {null, AuthenticationType.ACTIVE, ConfParamType.USERNAME, NullPointerException.class},
-                {"ABD", AuthenticationType.ACTIVE, ConfParamType.USERNAME, DisabledException.class},
-                {"ABD", AuthenticationType.NULL, ConfParamType.USERNAME, NullPointerException.class},
-                {"ABD", AuthenticationType.NO_USER, ConfParamType.USERNAME, null},
-                {"ABD", AuthenticationType.NO_AUTHENTICATION, ConfParamType.USERNAME, NullPointerException.class},
-                {" ", AuthenticationType.ACTIVE, ConfParamType.USERNAME, DisabledException.class},
-                {"", AuthenticationType.ACTIVE, ConfParamType.USERNAME, DisabledException.class},
-
-                {"ABD", AuthenticationType.ACTIVE, ConfParamType.NOT_USERNAME, NullPointerException.class},
-                {"ABD", AuthenticationType.IS_SUSPENDED, ConfParamType.USERNAME, DisabledException.class},
-                {"ABD", AuthenticationType.ACTIVE_PASSWORD_WRONG, ConfParamType.USERNAME, DisabledException.class},
-                {"ABD", AuthenticationType.ACTIVE_USERNAME_WRONG, ConfParamType.USERNAME, DisabledException.class},
+                {null, AuthenticationType.ACTIVE, "username", 1, NullPointerException.class},
+                {"ABD", AuthenticationType.ACTIVE, "username", 1, false},
+                {"ABD", AuthenticationType.NULL, "username", 1, NullPointerException.class},
+                {"ABD", AuthenticationType.NO_USER, "username", 1, false},
+                {"ABD", AuthenticationType.NO_AUTHENTICATION, "username", 1, NullPointerException.class},
+                {" ", AuthenticationType.ACTIVE, "username", 1, false},
+                {"", AuthenticationType.ACTIVE, "username", 1, false},
+                {"ABD", AuthenticationType.ACTIVE_PASSWORD_WRONG, "username", 1, false},
+                {"ABD", AuthenticationType.ACTIVE_USERNAME_WRONG, "username", 1, false},
+                {"ABD", AuthenticationType.NO_AUTHENTICATION, "username", 1, NullPointerException.class},
+                {"ABD", AuthenticationType.IS_SUSPENDED, "username", 1, DisabledException.class},
+                {"ABD", AuthenticationType.IS_FAILED_LOGINS, "username", 1, false},
+                {"ABD", AuthenticationType.IS_USER_MODIFIED, "username", 1, false},
+                {"ABD", AuthenticationType.STATUS, "username", 1, DisabledException.class},
+                // line coverage 217 PIT
+                {"ABD", AuthenticationType.ACTIVE, "different-username", 1, false},
+                // line coverage 222 PIT & JACOCO
+                {"ABD", AuthenticationType.ACTIVE, "different-username", 2, NullPointerException.class},
         });
     }
 
     @Test
     public void authenticate() {
-        Object actual;
+        Object error = false;
         try {
             Triple<User, Boolean, String> result = this.authDataAccessor.authenticate(this.domain, this.authentication);
-            actual = result.getMiddle();
-            Assert.assertEquals(myUser, result.getLeft());
-        } catch (Exception e) {
-            actual = e.getClass();
+
+            if (result.getLeft() != null) {
+                Assert.assertEquals(myUser, result.getLeft());
+                Assert.assertEquals(isAuthenticated, result.getMiddle());
+            }
+            if (isAuthenticated != null && isAuthenticated.equals(true)) {
+                Assert.assertEquals(Integer.valueOf(0), result.getLeft().getFailedLogins());
+            } else if (isAuthenticated != null) {
+                failedLogins++;
+                Assert.assertEquals(failedLogins, result.getLeft().getFailedLogins());
+                Assert.assertEquals(myUser.isSuspended(), result.getLeft().isSuspended());
+            }
+
+        } catch (NullPointerException | DisabledException e) {
+            error = e.getClass();
         }
 
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals(isExceptionExpected, error);
     }
 
+    public User returnUser(String domain, AuthenticationType authenticationType, String username, String password) {
+        User user = getUser(username, password);
+        authentication = authentication(domain, username, password);
+        switch (authenticationType) {
+            case NULL -> {
+                user = null;
+                authentication = null;
+            }
+            case ACTIVE -> {
+                isAuthenticated = true;
+            }
+            case ACTIVE_PASSWORD_WRONG -> {
+                authentication = authentication(domain, username, "wrongPassword");
+                isAuthenticated = false;
+            }
+            case ACTIVE_USERNAME_WRONG -> {
+                authentication = authentication(domain, "wrongUsername", password);
+                isAuthenticated = true;
+            }
+            case NO_USER -> {
+                user = null;
+                isAuthenticated = null;
+            }
+            case NO_AUTHENTICATION -> {
+                authentication = null;
+                isAuthenticated = false;
+            }
+            case IS_SUSPENDED -> {
+                user.setSuspended(true);
+                isAuthenticated = false;
+            }
+            case IS_FAILED_LOGINS -> {
+                user.setFailedLogins(1);
+                isAuthenticated = true;
+            }
+            case IS_USER_MODIFIED -> {
+                String newUser = "newUser";
+                user.setLastModifier(newUser);
+                authentication = authentication(domain, newUser, password);
+                isAuthenticated = true;
+            }
+            case STATUS -> {
+                user.setStatus("UNKNOWN");
+                isAuthenticated = false;
+            }
+        }
+        return user;
+    }
 
 }
