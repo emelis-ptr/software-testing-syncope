@@ -10,7 +10,6 @@ public class AuthDataAccessorEnum {
         NO_AUTHENTICATION,
         IS_SUSPENDED,
         IS_FAILED_LOGINS,
-        IS_USER_MODIFIED,
         STATUS,
     }
 }

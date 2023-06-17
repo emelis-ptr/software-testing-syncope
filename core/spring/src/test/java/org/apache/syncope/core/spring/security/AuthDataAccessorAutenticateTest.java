@@ -62,12 +62,12 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorMock {
                 {"ABD", AuthenticationType.NO_AUTHENTICATION, "username", 1, NullPointerException.class},
                 {"ABD", AuthenticationType.IS_SUSPENDED, "username", 1, DisabledException.class},
                 {"ABD", AuthenticationType.IS_FAILED_LOGINS, "username", 1, false},
-                {"ABD", AuthenticationType.IS_USER_MODIFIED, "username", 1, false},
                 {"ABD", AuthenticationType.STATUS, "username", 1, DisabledException.class},
                 // line coverage 217 PIT
                 {"ABD", AuthenticationType.ACTIVE, "different-username", 1, false},
                 // line coverage 222 PIT & JACOCO
                 {"ABD", AuthenticationType.ACTIVE, "different-username", 2, NullPointerException.class},
+                {"ABD", AuthenticationType.ACTIVE, "username", 2, false},
         });
     }
 
@@ -129,12 +129,6 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorMock {
             }
             case IS_FAILED_LOGINS -> {
                 user.setFailedLogins(1);
-                isAuthenticated = true;
-            }
-            case IS_USER_MODIFIED -> {
-                String newUser = "newUser";
-                user.setLastModifier(newUser);
-                authentication = authentication(domain, newUser, password);
                 isAuthenticated = true;
             }
             case STATUS -> {
