@@ -1,7 +1,6 @@
 package org.apache.syncope.core.spring.security;
 
 import org.apache.syncope.common.lib.types.CipherAlgorithm;
-import org.apache.syncope.core.spring.security.Encryptor;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,6 +42,7 @@ public class EncryptorDecodeTest {
                 {encryptValue("password", CipherAlgorithm.AES), null, false},
                 {encryptValue("password", CipherAlgorithm.BCRYPT), CipherAlgorithm.BCRYPT, false},
                 {encryptValue("passwordSbagliata", CipherAlgorithm.BCRYPT), CipherAlgorithm.BCRYPT, false},
+                {null, CipherAlgorithm.BCRYPT, false},
         });
     }
 
