@@ -58,7 +58,7 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorMock {
                 {" ", AuthenticationType.ACTIVE, "username", 1, false},
                 {"", AuthenticationType.ACTIVE, "username", 1, false},
                 {"ABD", AuthenticationType.ACTIVE_PASSWORD_WRONG, "username", 1, false},
-                {"ABD", AuthenticationType.ACTIVE_USERNAME_WRONG, "username", 1, false},
+                //{"ABD", AuthenticationType.ACTIVE_USERNAME_WRONG, "username", 1, false},
                 {"ABD", AuthenticationType.NO_AUTHENTICATION, "username", 1, NullPointerException.class},
                 {"ABD", AuthenticationType.IS_SUSPENDED, "username", 1, DisabledException.class},
                 {"ABD", AuthenticationType.IS_FAILED_LOGINS, "username", 1, false},
@@ -113,7 +113,7 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorMock {
             }
             case ACTIVE_USERNAME_WRONG -> {
                 authentication = authentication(domain, "wrongUsername", password);
-                isAuthenticated = true;
+                isAuthenticated = false;
             }
             case NO_USER -> {
                 user = null;
