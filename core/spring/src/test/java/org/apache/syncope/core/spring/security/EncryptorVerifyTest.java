@@ -29,17 +29,26 @@ public class EncryptorVerifyTest {
     public static Collection<Object[]> parameters() {
         return Arrays.asList(new Object[][]{
                 {null, CipherAlgorithm.AES, encryptValue(null, CipherAlgorithm.AES), false},
-                {"abd", CipherAlgorithm.AES, encryptValue("abd", CipherAlgorithm.AES), true},
+                {"Test", CipherAlgorithm.AES, encryptValue("Test", CipherAlgorithm.AES), true},
                 {" ", CipherAlgorithm.BCRYPT, encryptValue(" ", CipherAlgorithm.BCRYPT), true},
                 {"", CipherAlgorithm.BCRYPT, encryptValue("", CipherAlgorithm.BCRYPT), true},
-                {"abcd", CipherAlgorithm.BCRYPT, encryptValue("abcd", CipherAlgorithm.BCRYPT), true},
+                {"Test", CipherAlgorithm.BCRYPT, encryptValue("Test", CipherAlgorithm.BCRYPT), true},
                 // cipherAlgorithm != encrypted cipherAlgorithm
-                {"abcd", CipherAlgorithm.AES, encryptValue("abcd", CipherAlgorithm.BCRYPT), false},
-                {null, CipherAlgorithm.BCRYPT, encryptValue("abcd", CipherAlgorithm.AES), false},
-                // line coverage 126 PIT
-                {"abcd", CipherAlgorithm.SHA, encryptValue("abcd", CipherAlgorithm.SHA), true},
-                // line coverage 121 JACOCO
-                {"abd", null, encryptValue("abd", CipherAlgorithm.AES), true},
+                {"Test", CipherAlgorithm.AES, encryptValue("Test", CipherAlgorithm.BCRYPT), false},
+                {null, CipherAlgorithm.BCRYPT, encryptValue("Test", CipherAlgorithm.AES), false},
+                // JACOCO line coverage 121
+                {"Test", null, encryptValue("Test", CipherAlgorithm.AES), true},
+                // PIT line coverage 126
+                {"Test", CipherAlgorithm.SHA, encryptValue("Test", CipherAlgorithm.SHA), true},
+                // Other CipherAlgorithm
+                {"Test", CipherAlgorithm.SHA1, encryptValue("Test", CipherAlgorithm.SHA1), true},
+                {"Test", CipherAlgorithm.SHA256, encryptValue("Test", CipherAlgorithm.SHA256), true},
+                {"Test", CipherAlgorithm.SHA512, encryptValue("Test", CipherAlgorithm.SHA512), true},
+                {"Test", CipherAlgorithm.SSHA, encryptValue("Test", CipherAlgorithm.SSHA), false},
+                {"Test", CipherAlgorithm.SSHA1, encryptValue("Test", CipherAlgorithm.SSHA1), false},
+                {"Test", CipherAlgorithm.SSHA256, encryptValue("Test", CipherAlgorithm.SSHA256), false},
+                {"Test", CipherAlgorithm.SSHA512, encryptValue("Test", CipherAlgorithm.SSHA512), false},
+                {"Test", CipherAlgorithm.SMD5, encryptValue("Test", CipherAlgorithm.SMD5), false},
 
         });
     }
@@ -57,7 +66,7 @@ public class EncryptorVerifyTest {
             encoded = encryptor.encode(value, cipherAlgorithm);
         } catch (Exception e) {
             e.printStackTrace();
-            encoded = null;
+            encoded = e.getClass().toString();
         }
         return encoded;
     }

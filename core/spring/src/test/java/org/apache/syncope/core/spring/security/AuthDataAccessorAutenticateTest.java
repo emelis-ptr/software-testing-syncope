@@ -23,6 +23,7 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorMock {
     private User myUser;
     private Integer failedLogins;
     private Object isAuthenticated;
+    private static final String DOMAIN = "Master";
 
     public AuthDataAccessorAutenticateTest(String domain, AuthenticationType authenticationType, String confParamUsername, int numUsers, Object isExceptionExpected) {
         this.domain = domain;
@@ -51,23 +52,23 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorMock {
     public static Collection<Object[]> parameters() {
         return Arrays.asList(new Object[][]{
                 {null, AuthenticationType.ACTIVE, "username", 1, NullPointerException.class},
-                {"ABD", AuthenticationType.ACTIVE, "username", 1, false},
-                {"ABD", AuthenticationType.NULL, "username", 1, NullPointerException.class},
-                {"ABD", AuthenticationType.NO_USER, "username", 1, false},
-                {"ABD", AuthenticationType.NO_AUTHENTICATION, "username", 1, NullPointerException.class},
+                {DOMAIN, AuthenticationType.ACTIVE, "username", 1, false},
+                {DOMAIN, AuthenticationType.NULL, "username", 1, NullPointerException.class},
+                {DOMAIN, AuthenticationType.NO_USER, "username", 1, false},
+                {DOMAIN, AuthenticationType.NO_AUTHENTICATION, "username", 1, NullPointerException.class},
                 {" ", AuthenticationType.ACTIVE, "username", 1, false},
                 {"", AuthenticationType.ACTIVE, "username", 1, false},
-                {"ABD", AuthenticationType.ACTIVE_PASSWORD_WRONG, "username", 1, false},
+                {DOMAIN, AuthenticationType.ACTIVE_PASSWORD_WRONG, "username", 1, false},
                 //{"ABD", AuthenticationType.ACTIVE_USERNAME_WRONG, "username", 1, false},
-                {"ABD", AuthenticationType.NO_AUTHENTICATION, "username", 1, NullPointerException.class},
-                {"ABD", AuthenticationType.IS_SUSPENDED, "username", 1, DisabledException.class},
-                {"ABD", AuthenticationType.IS_FAILED_LOGINS, "username", 1, false},
-                {"ABD", AuthenticationType.STATUS, "username", 1, DisabledException.class},
-                // line coverage 217 PIT
-                {"ABD", AuthenticationType.ACTIVE, "different-username", 1, false},
+                {DOMAIN, AuthenticationType.NO_AUTHENTICATION, "username", 1, NullPointerException.class},
+                {DOMAIN, AuthenticationType.IS_SUSPENDED, "username", 1, DisabledException.class},
+                {DOMAIN, AuthenticationType.IS_FAILED_LOGINS, "username", 1, false},
+                {DOMAIN, AuthenticationType.STATUS, "username", 1, DisabledException.class},
                 // line coverage 222 PIT & JACOCO
-                {"ABD", AuthenticationType.ACTIVE, "different-username", 2, NullPointerException.class},
-                {"ABD", AuthenticationType.ACTIVE, "username", 2, false},
+                {DOMAIN, AuthenticationType.ACTIVE, "different-username", 2, NullPointerException.class},
+                // line coverage 217 PIT
+                {DOMAIN, AuthenticationType.ACTIVE, "different-username", 1, false},
+                {DOMAIN, AuthenticationType.ACTIVE, "username", 2, false},
         });
     }
 
@@ -91,6 +92,7 @@ public class AuthDataAccessorAutenticateTest extends AuthDataAccessorMock {
 
         } catch (NullPointerException | DisabledException e) {
             error = e.getClass();
+            e.printStackTrace();
         }
 
         Assert.assertEquals(isExceptionExpected, error);

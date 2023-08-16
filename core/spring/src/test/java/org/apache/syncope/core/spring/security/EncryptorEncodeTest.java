@@ -46,10 +46,17 @@ public class EncryptorEncodeTest {
                 {"", CipherAlgorithm.BCRYPT, true},
                 {" ", CipherAlgorithm.BCRYPT, true},
                 {"", null, true},
-                {"abcd", CipherAlgorithm.BCRYPT, true},
-                {"abcd", null, true},
-                // line coverage 109
-                {"abcd", CipherAlgorithm.SHA, true},
+                {"Test", CipherAlgorithm.BCRYPT, true},
+                {"Test", null, true},
+                {"Test", CipherAlgorithm.SHA, true},
+                // Other CipherAlgorithm
+                {"Test", CipherAlgorithm.SHA1, true},
+                {"Test", CipherAlgorithm.SHA256, true},
+                {"Test", CipherAlgorithm.SHA512, true},
+                {"Test", CipherAlgorithm.SMD5, NullPointerException.class},
+                {"Test", CipherAlgorithm.SSHA, NullPointerException.class},
+                {"Test", CipherAlgorithm.SSHA256, NullPointerException.class},
+                {"Test", CipherAlgorithm.SSHA512, NullPointerException.class},
         });
     }
 

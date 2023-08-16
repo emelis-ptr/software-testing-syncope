@@ -25,6 +25,9 @@ public class AuthDataAccessorGetAuthoritiesTest extends AuthDataAccessorMock {
     private final Object isExceptionExpected;
     private User user;
 
+    private static final String USERNAME = "username";
+    private static final String DELEGATION_KEY = "delegationKey";
+
     public AuthDataAccessorGetAuthoritiesTest(String username, String delegationKey, SecurityProperties securityProperties, boolean isDelegationFound, boolean isFoundUser, boolean isEmptyRole, Object isExceptionExpected) {
         this.username = username;
         this.delegationKey = delegationKey;
@@ -46,22 +49,23 @@ public class AuthDataAccessorGetAuthoritiesTest extends AuthDataAccessorMock {
     @Parameterized.Parameters
     public static Collection<Object[]> parameters() {
         return Arrays.asList(new Object[][]{
-                {null, null, mockSecurityProperties("abd", "efg"), true, true, false, NullPointerException.class},
-                {"abd", null, mockSecurityProperties("abd", "efg"), true, true, false, false},
-                {null, "efg", mockSecurityProperties("abd", "efg"), true, true, false, false},
+                {null, null, mockSecurityProperties(USERNAME, DELEGATION_KEY), true, true, false, NullPointerException.class},
+                {USERNAME, null, mockSecurityProperties(USERNAME, DELEGATION_KEY), true, true, false, false},
+                {null, DELEGATION_KEY, mockSecurityProperties(USERNAME, DELEGATION_KEY), true, true, false, false},
+                {"", DELEGATION_KEY, mockSecurityProperties(USERNAME, DELEGATION_KEY), true, true, false, false},
                 // anonymousUser = username && adminUser == username
-                {"abd", "efg", mockSecurityProperties("abd", "abd"), false, true, false, UsernameNotFoundException.class},
-                {"abd", "efg", mockSecurityProperties("abd", "abd"), true, true, false, false},
+                {USERNAME, DELEGATION_KEY, mockSecurityProperties(USERNAME, USERNAME), false, true, false, UsernameNotFoundException.class},
+                {USERNAME, DELEGATION_KEY, mockSecurityProperties(USERNAME, USERNAME), true, true, false, false},
                 // anonymousUser != username && adminUser == username
-                {"abd", "efg", mockSecurityProperties("def", "abd"), true, true, false, false},
+                {USERNAME, DELEGATION_KEY, mockSecurityProperties(USERNAME+"a", USERNAME), true, true, false, false},
                 // anonymousUser != username && adminUser != username && delegationKey != null
-                {"abd", "efg", mockSecurityProperties("def", "abdd"), true, true, false, false},
-                {"abd", "efg", mockSecurityProperties("def", "abdd"), false, true, false, UsernameNotFoundException.class},
-                {"abd", "efg", mockSecurityProperties("def", "abdd"), true, true, true, NullPointerException.class},
-                {"abd", "efg", mockSecurityProperties("def", "abdd"), true, true, false, false},
+                {USERNAME, DELEGATION_KEY, mockSecurityProperties(USERNAME+"a", USERNAME+"b"), true, true, false, false},
+                {USERNAME, DELEGATION_KEY, mockSecurityProperties(USERNAME+"a", USERNAME+"b"), false, true, false, UsernameNotFoundException.class},
+                {USERNAME, DELEGATION_KEY, mockSecurityProperties(USERNAME+"a", USERNAME+"b"), true, true, true, NullPointerException.class},
+                {USERNAME, DELEGATION_KEY, mockSecurityProperties(USERNAME+"a", USERNAME+"b"), true, true, false, false},
                 // anonymousUser != username && adminUser != username && delegationKey == null
-                {"abd", null, mockSecurityProperties("def", "abdd"), true, false, true, UsernameNotFoundException.class},
-                {"abd", null, mockSecurityProperties("def", "abdd"), true, true, false, NullPointerException.class},
+                {USERNAME, null, mockSecurityProperties(USERNAME+"a", USERNAME+"b"), true, false, true, UsernameNotFoundException.class},
+                {USERNAME, null, mockSecurityProperties(USERNAME+"a", USERNAME+"b"), true, true, false, NullPointerException.class},
 
         });
     }

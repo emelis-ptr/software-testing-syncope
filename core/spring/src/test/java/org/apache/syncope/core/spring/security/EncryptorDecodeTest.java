@@ -43,6 +43,16 @@ public class EncryptorDecodeTest {
                 {encryptValue("password", CipherAlgorithm.BCRYPT), CipherAlgorithm.BCRYPT, false},
                 {encryptValue("passwordSbagliata", CipherAlgorithm.BCRYPT), CipherAlgorithm.BCRYPT, false},
                 {null, CipherAlgorithm.BCRYPT, false},
+                // Other CipherAlgorithm
+                {encryptValue("password", CipherAlgorithm.SHA), CipherAlgorithm.SHA, false},
+                {encryptValue("password", CipherAlgorithm.SHA1), CipherAlgorithm.SHA1, false},
+                {encryptValue("password", CipherAlgorithm.SHA256), CipherAlgorithm.SHA256, false},
+                {encryptValue("password", CipherAlgorithm.SHA512), CipherAlgorithm.SHA512, false},
+                {encryptValue("password", CipherAlgorithm.SSHA), CipherAlgorithm.SSHA, false},
+                {encryptValue("password", CipherAlgorithm.SSHA1), CipherAlgorithm.SSHA1, false},
+                {encryptValue("password", CipherAlgorithm.SSHA256), CipherAlgorithm.SSHA256, false},
+                {encryptValue("password", CipherAlgorithm.SSHA512), CipherAlgorithm.SSHA512, false},
+                {encryptValue("password", CipherAlgorithm.SMD5), CipherAlgorithm.SMD5, false},
         });
     }
 
@@ -78,7 +88,7 @@ public class EncryptorDecodeTest {
             encoded = encryptor.encode(value, cipherAlgorithm);
         } catch (Exception e) {
             e.printStackTrace();
-            encoded = null;
+            encoded = e.getClass().toString();
         }
         return encoded;
     }
