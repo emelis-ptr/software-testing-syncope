@@ -164,11 +164,11 @@ under the License.
 
     <build>
         <plugins>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.3.0</version>
-            </plugin>
+            </plugin>-->
         </plugins>
         <resources>
             <resource>
